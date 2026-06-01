@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正在前往預約系統...</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+    <div style="text-align: center; margin-top: 50px; font-family: sans-serif; color: #999;">
+        <p>載入中，請稍候...</p>
+    </div>
+    <script>
+        // ✏️ 第一處修改：填入你的 LIFF ID
+        const MY_LIFF_ID = '你的_LIFF_ID';
+
+        // ✏️ 第二處修改：填入你的 Cal.com 預約頁網址
+        // 注意：結尾不要加「/」，不要帶任何參數
+        const CAL_URL = 'https://cal.com/你的名稱/你的服務';
+
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: MY_LIFF_ID });
+
+                if (liff.isLoggedIn()) {
+                    const profile = await liff.getProfile();
+                    const userId = profile.userId;
+
+                    // 將 LINE UID 帶入 Cal.com 網址
+                    const finalUrl = `${CAL_URL}?line_user_id=${userId}`;
+                    window.location.href = finalUrl;
+
+                } else {
+                    // 若在 LINE 外部瀏覽器開啟，引導登入
+                    liff.login();
+                }
+
+            } catch (error) {
+                console.error('LIFF 初始化失敗', error);
+            }
+        }
+
+        initializeLiff();
+    </script>
+</body>
+</html>
